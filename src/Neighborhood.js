@@ -30,7 +30,7 @@ export  class Neighborhood extends Component{
         if(this.debug)
             console.log("Component Did Mount");
         var script=document.createElement('script');
-        script.src=`https://maps.googleapis.com/maps/api/js?key=${APIKey}`;
+        script.src=`https://maps.googleapis.com/maps/api/js?key=${APIKey}&libraries=places`;
         script.async=true;
         script.defer=true;
         script.addEventListener('load',()=>{
