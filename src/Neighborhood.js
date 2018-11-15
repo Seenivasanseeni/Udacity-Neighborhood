@@ -13,6 +13,7 @@ export  class Neighborhood extends Component{
         super(props);
         this.debug=true;
         this.setState=this.setState.bind(this);
+        this.updateStateHandler=this.updateStateHandler.bind(this);
     }
 
     initializeMap(){
@@ -47,8 +48,20 @@ export  class Neighborhood extends Component{
 
                     </ol>
                 </div>
+                <button onClick={this.updateStateHandler}>UpdateState</button>
             </div>
             <div id="map" className="col-sm-70 map full-height"></div>
         </div>
+    }
+
+    updateStateHandler() {
+        this.setState({
+            query: 'changed'+Math.random()
+        })
+    }
+    componentDidUpdate(){
+        if(this.debug)
+            console.log("Component Did Update");
+
     }
 }
