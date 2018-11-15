@@ -9,7 +9,8 @@ export  class Neighborhood extends Component{
             position: {lat: 12.9716, lng: 77.5946},
             text: 'Bangalore Main'
         },
-        locations:[{
+        locations:[],
+        allLocations:[{
             "position": {
                 "lat": 12.97164742807048,
                 "lng": 77.59579181671143
@@ -102,7 +103,7 @@ export  class Neighborhood extends Component{
         this.debug=true;
         this.setState=this.setState.bind(this);
         this.updateQueryHandler=this.updateQueryHandler.bind(this);
-        this.getSearchResuls=this.getSearchResuls.bind(this);
+        this.getSearchResults=this.getSearchResults.bind(this);
     }
 
     initializeMap(){
@@ -122,11 +123,13 @@ export  class Neighborhood extends Component{
         }
     }
     initializeMarkers(){
+        console.log("Creating markers for ",this.state.locations.length);
         this.state.locations.map(location=>{
             this.createMarker(location)
         })
     }
     createMarker(location){
+        console.log("CreateMarker",location);
         var marker=new window.google.maps.Marker({
             map:this.map,
             position: location.position,
@@ -145,15 +148,15 @@ export  class Neighborhood extends Component{
         script.async=true;
         script.defer=true;
         script.addEventListener('load',()=>{
-            console.log("Google Maps API script loaded");
-            this.setState({mapReady: true},this.initializeMap())
+            console.log("Google Maps API script loaded",this.state);
+            this.setState({mapReady: true,locations:this.state.allLocations},this.initializeMap)
         })
         document.body.appendChild(script);
     }
     render(){
         return <div className="Neighborhood">
             <div className="col-sm-30 full-height">
-                <input type="text" placeholder="Enter Place Name "  onChange={this.updateQueryHandler} />
+                <input type="text" placeholder="Enter Place Name "  onChange={this.updateQueryHandler} value={this.state.query}/>
                 <div className="search-results">
                     <ol>
                         {
@@ -175,19 +178,23 @@ export  class Neighborhood extends Component{
             console.log("Update query Handler",evt.target.value);
         }
         this.setState({
-            query: evt.target.value
+            query: evt.target.value,
+            locations: this.getSearchResults(evt.target.value)
+        },()=>{
+            this.initializeMarkers();
         })
-        this.populateSearchResuls(evt.target.value);
+
     }
 
-    getSearchResuls(query) {
+    getSearchResults(query) {
         var resultLocations=this.state.locations.filter(location=>(location.text.toLowerCase().indexOf(query.toLowerCase())!=-1));
-        console.log(this.resultLocations);
-        return this.resultLocations;
+        console.log(resultLocations);
+        return resultLocations;
     }
     componentDidUpdate(){
         if(this.debug)
             console.log("Component Did Update");
 
     }
+
 }
