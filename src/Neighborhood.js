@@ -13,7 +13,7 @@ export  class Neighborhood extends Component{
         super(props);
         this.debug=true;
         this.setState=this.setState.bind(this);
-        this.updateStateHandler=this.updateStateHandler.bind(this);
+        this.updateQueryHandler=this.updateQueryHandler.bind(this);
     }
 
     initializeMap(){
@@ -42,21 +42,23 @@ export  class Neighborhood extends Component{
     render(){
         return <div className="Neighborhood">
             <div className="col-sm-30 full-height">
-                <input type="text" placeholder="Enter Place Name " />
+                <input type="text" placeholder="Enter Place Name "  onChange={this.updateQueryHandler} />
                 <div className="search-results">
                     <ol>
 
                     </ol>
                 </div>
-                <button onClick={this.updateStateHandler}>UpdateState</button>
             </div>
             <div id="map" className="col-sm-70 map full-height"></div>
         </div>
     }
 
-    updateStateHandler() {
+    updateQueryHandler(evt) {
+        if(this.debug){
+            console.log("Update query Handler",evt.target.value);
+        }
         this.setState({
-            query: 'changed'+Math.random()
+            query: evt.target.value
         })
     }
     componentDidUpdate(){
