@@ -129,7 +129,6 @@ export  class Neighborhood extends Component{
         })
     }
     createMarker(location){
-        console.log("CreateMarker",location);
         var marker=new window.google.maps.Marker({
             map:this.map,
             position: location.position,
@@ -181,14 +180,18 @@ export  class Neighborhood extends Component{
             query: evt.target.value,
             locations: this.getSearchResults(evt.target.value)
         },()=>{
+            console.log(this.state)
             this.initializeMarkers();
         })
 
     }
 
     getSearchResults(query) {
-        var resultLocations=this.state.locations.filter(location=>(location.text.toLowerCase().indexOf(query.toLowerCase())!=-1));
-        console.log(resultLocations);
+        var resultLocations=this.state.allLocations.filter(location=>(location.text.toLowerCase().indexOf(query.toLowerCase())!=-1));
+        if(query.length==0){
+            resultLocations=this.state.allLocations;
+        }
+        console.log("For ",query,resultLocations);
         return resultLocations;
     }
     componentDidUpdate(){
