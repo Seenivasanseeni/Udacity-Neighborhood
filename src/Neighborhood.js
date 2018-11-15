@@ -104,6 +104,8 @@ export  class Neighborhood extends Component{
         this.setState=this.setState.bind(this);
         this.updateQueryHandler=this.updateQueryHandler.bind(this);
         this.getSearchResults=this.getSearchResults.bind(this);
+        this.createInfoWindow=this.createInfoWindow.bind(this);
+        this.clickMarkerHandler=this.clickMarkerHandler.bind(this);
     }
 
     initializeMap(){
@@ -140,12 +142,15 @@ export  class Neighborhood extends Component{
             title: location.text
         })
         marker.addListener('click',(event)=>{
-            this.infoWindow.setContent(location.text);
-            this.infoWindow.open(this.map,marker);
+            this.createInfoWindow(location,marker);
         })
         if(!location.marker){
             location.marker=marker;
         }
+    }
+    createInfoWindow(location,marker){
+        this.infoWindow.setContent(location.text);
+        this.infoWindow.open(this.map,marker);
     }
     componentDidMount(){
         if(this.debug)
@@ -155,7 +160,7 @@ export  class Neighborhood extends Component{
         script.async=true;
         script.defer=true;
         script.addEventListener('load',()=>{
-            console.log("Google Maps API script loaded",this.state);
+            console.log("Google Maps API script loaded");
             this.setState({mapReady: true,locations:this.state.allLocations},this.initializeMap)
         })
         document.body.appendChild(script);
@@ -170,7 +175,7 @@ export  class Neighborhood extends Component{
                     <ol className="list-group">
                         {
                             this.state.locations.map(location=>{
-                                return <a key={location.text} className="list-group-item list-group-item-action" href="#" >
+                                return <a key={location.text} className="list-group-item list-group-item-action" href="#" onClick={()=>{this.clickMarkerHandler(location)}}>
                                         {location.text}
                                 </a>
                             })
@@ -180,6 +185,10 @@ export  class Neighborhood extends Component{
             </div>
             <div id="map" className="col-sm-9 map full-height"></div>
         </div>
+    }
+
+    clickMarkerHandler(location) {
+        console.log(location);
     }
 
     updateQueryHandler(evt) {
