@@ -162,21 +162,23 @@ export  class Neighborhood extends Component{
     }
     render(){
         return <div className="Neighborhood">
-            <div className="col-sm-30 full-height">
-                <input type="text" placeholder="Enter Place Name "  onChange={this.updateQueryHandler} value={this.state.query}/>
+            <div className="col-sm-3 full-height">
+                <div className="form-group">
+                    <input type="text" placeholder="Enter Place Name "  onChange={this.updateQueryHandler} value={this.state.query} className="form-control"/>
+                </div>
                 <div className="search-results">
-                    <ol>
+                    <ol className="list-group">
                         {
                             this.state.locations.map(location=>{
-                                return <li key={location.text}>
+                                return <a key={location.text} className="list-group-item list-group-item-action" href="#" >
                                         {location.text}
-                                </li>
+                                </a>
                             })
                         }
                     </ol>
                 </div>
             </div>
-            <div id="map" className="col-sm-70 map full-height"></div>
+            <div id="map" className="col-sm-9 map full-height"></div>
         </div>
     }
 
