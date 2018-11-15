@@ -110,12 +110,25 @@ export  class Neighborhood extends Component{
             center: this.state.center.position,
             zoom:14
         })
+        this.initializeMarkers()
         this.initilizeService()
     }
     initilizeService(){
         if(this.map){
            this.placeService=new window.google.maps.places.PlacesService(this.map);
         }
+    }
+    initializeMarkers(){
+        this.state.locations.map(location=>{
+            var marker=new window.google.maps.Marker({
+                map:this.map,
+                position: location.position,
+                content: location.text
+            })
+        })
+    }
+    createMarker(){
+
     }
     componentDidMount(){
         if(this.debug)
