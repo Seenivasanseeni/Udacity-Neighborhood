@@ -115,18 +115,23 @@ export  class Neighborhood extends Component{
             content:''
         })
         this.initializeMarkers()
-        this.initilizeService()
-    }
-    initilizeService(){
-        if(this.map){
-           this.placeService=new window.google.maps.places.PlacesService(this.map);
-        }
     }
     initializeMarkers(){
-        console.log("Creating markers for ",this.state.locations.length);
         this.state.locations.map(location=>{
             this.createMarker(location)
         })
+
+    }
+    updateMarkers(){
+        //hide all markers
+        this.state.allLocations.map(location=>{
+            location.marker.setMap(null);
+        })
+        //show all markers for only filtered results
+        this.state.locations.map(location=>{
+            location.marker.setMap(this.map);
+        })
+
     }
     createMarker(location){
         var marker=new window.google.maps.Marker({
@@ -138,6 +143,9 @@ export  class Neighborhood extends Component{
             this.infoWindow.setContent(location.text);
             this.infoWindow.open(this.map,marker);
         })
+        if(!location.marker){
+            location.marker=marker;
+        }
     }
     componentDidMount(){
         if(this.debug)
@@ -180,18 +188,13 @@ export  class Neighborhood extends Component{
             query: evt.target.value,
             locations: this.getSearchResults(evt.target.value)
         },()=>{
-            console.log(this.state)
-            this.initializeMarkers();
+            this.updateMarkers();
         })
 
     }
 
     getSearchResults(query) {
         var resultLocations=this.state.allLocations.filter(location=>(location.text.toLowerCase().indexOf(query.toLowerCase())!=-1));
-        if(query.length==0){
-            resultLocations=this.state.allLocations;
-        }
-        console.log("For ",query,resultLocations);
         return resultLocations;
     }
     componentDidUpdate(){
