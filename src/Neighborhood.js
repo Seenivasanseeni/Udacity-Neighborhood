@@ -110,6 +110,9 @@ export  class Neighborhood extends Component{
             center: this.state.center.position,
             zoom:14
         })
+        this.infoWindow=new  window.google.maps.InfoWindow({
+            content:''
+        })
         this.initializeMarkers()
         this.initilizeService()
     }
@@ -120,15 +123,19 @@ export  class Neighborhood extends Component{
     }
     initializeMarkers(){
         this.state.locations.map(location=>{
-            var marker=new window.google.maps.Marker({
-                map:this.map,
-                position: location.position,
-                content: location.text
-            })
+            this.createMarker(location)
         })
     }
-    createMarker(){
-
+    createMarker(location){
+        var marker=new window.google.maps.Marker({
+            map:this.map,
+            position: location.position,
+            title: location.text
+        })
+        marker.addListener('click',(event)=>{
+            this.infoWindow.setContent(location.text);
+            this.infoWindow.open(this.map,marker);
+        })
     }
     componentDidMount(){
         if(this.debug)
@@ -151,7 +158,7 @@ export  class Neighborhood extends Component{
                     <ol>
                         {
                             this.state.locations.map(location=>{
-                                return <li>
+                                return <li key={location.text}>
                                         {location.text}
                                 </li>
                             })
