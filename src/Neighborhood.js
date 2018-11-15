@@ -102,7 +102,7 @@ export  class Neighborhood extends Component{
         this.debug=true;
         this.setState=this.setState.bind(this);
         this.updateQueryHandler=this.updateQueryHandler.bind(this);
-        this.populateSearchResuls=this.populateSearchResuls.bind(this);
+        this.getSearchResuls=this.getSearchResuls.bind(this);
     }
 
     initializeMap(){
@@ -177,16 +177,13 @@ export  class Neighborhood extends Component{
         this.setState({
             query: evt.target.value
         })
-        this.populateSearchResuls();
+        this.populateSearchResuls(evt.target.value);
     }
 
-    populateSearchResuls() {
-        this.placeService.nearbySearch({
-            location: this.state.center.position,
-            radius:100
-        },(data)=>{
-            console.log("Nearby Search Done",data);
-        })
+    getSearchResuls(query) {
+        var resultLocations=this.state.locations.filter(location=>(location.text.toLowerCase().indexOf(query.toLowerCase())!=-1));
+        console.log(this.resultLocations);
+        return this.resultLocations;
     }
     componentDidUpdate(){
         if(this.debug)
