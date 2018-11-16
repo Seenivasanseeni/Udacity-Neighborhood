@@ -176,7 +176,11 @@ export  class Neighborhood extends Component{
                     if(!rating)
                         rating=5.0;
                     rating+='/10'
-                    var content=`<h6>Name:${name}</h6><p>Address:${address}</p><i>Rating:${rating}</i><br/><a href="${url}"> Visit FourSquarePage</a>"`
+                    var photo=venue.bestPhoto;
+                    var imgUrl;
+                    if(photo && photo.prefix && photo.suffix && photo.width && photo.height)
+                        imgUrl=venue.bestPhoto.prefix+`100x100`+photo.suffix;
+                    var content=`<img src="${imgUrl}" alt="${name}" /><h6>Name:${name}</h6><p>Address:${address}</p><i>Rating:${rating}</i><br/><a href="${url}"> Visit FourSquarePage</a>"`
                     this.infoWindow.setContent(content);
                     this.infoWindow.open(this.map, marker);
                     location.infoWindowContent=content; //save it for future use
