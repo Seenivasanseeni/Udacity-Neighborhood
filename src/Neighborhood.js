@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import {APIKey} from "./APIKey";
+import {GAPIKey,FCLIENT_ID,FCLIENT_SEC} from "./APIKey";
 import './Neighborhood.css'
 
 export  class Neighborhood extends Component{
@@ -159,7 +159,7 @@ export  class Neighborhood extends Component{
         //display temporary text;
         this.infoWindow.setContent(`${location.text}<br/>Details are Loading....`);
         this.infoWindow.open(this.map, marker);
-        var auth=`client_id=LVJO54D0VKC0UELX4IA43NT4YWFIUBW0O05B0VRA41LQ2J43&client_secret=YLQ3VUVGFCMG0WUXPDOXB3KNBJR5O5KEO4ZIHXHYBGDUWOV3&v=20190101`
+        var auth=`client_id=${FCLIENT_ID}&client_secret=${FCLIENT_SEC}&v=20190101`
 
         fetch(`https://api.foursquare.com/v2/venues/search?ll=${location.position.lat},${location.position.lng}&radius=40&intent=browse&${auth}`).then(response=>{
                 return response.json();
@@ -238,13 +238,16 @@ export  class Neighborhood extends Component{
         if(this.debug)
             console.log("Component Did Mount");
         var script=document.createElement('script');
-        script.src=`https://maps.googleapis.com/maps/api/js?key=${APIKey}&libraries=places&v=3`;
+        script.src=`https://maps.googleapis.com/maps/api/js?key=${GAPIKey}&libraries=places&v=3`;
         script.async=true;
         script.defer=true;
         script.addEventListener('load',()=>{
             console.log("Google Maps API script loaded");
             this.setState({mapReady: true,locations:this.state.allLocations},this.initializeMap)
         })
+        window.gm_authFailure=function(error){
+            console.log("API Key error Invalid Key error ")
+        }
         document.body.appendChild(script);
     }
     render(){
