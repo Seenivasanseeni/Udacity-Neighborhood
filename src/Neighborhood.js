@@ -139,7 +139,8 @@ export  class Neighborhood extends Component{
         var marker=new window.google.maps.Marker({
             map:this.map,
             position: location.position,
-            title: location.text
+            title: location.text,
+            animation: window.google.maps.Animation.DROP
         })
         marker.addListener('click',(event)=>{
             this.createInfoWindow(location,marker);
@@ -160,9 +161,7 @@ export  class Neighborhood extends Component{
             var bestLocation = venues[0]; //choose the first location
             return  fetch(`https://api.foursquare.com/v2/venues/${bestLocation.id}?${auth}`);
         }).then(response=>response.json()).then(data=>{
-            console.log("Second then")
             var venue=data.response.venue;
-            console.log("Test Conditon ",data.meta.code>=200&&data.meta.code<300);
             if(data.meta.code>=200&&data.meta.code<300){
                     var name=venue.name;
                     var url=venue.canonicalUrl;
@@ -170,6 +169,7 @@ export  class Neighborhood extends Component{
                     var rating=venue.rating;
                     if(!rating)
                         rating=5.0;
+                    rating+='/10'
                     var content=`<h6>Name:${name}</h6><p>Address:${address}</p><i>Rating:${rating}</i><br/><a href="${url}"> Visit FourSquarePage</a>"`
                     this.infoWindow.setContent(content);
                     this.infoWindow.open(this.map, marker);
@@ -181,7 +181,7 @@ export  class Neighborhood extends Component{
         if(this.debug)
             console.log("Component Did Mount");
         var script=document.createElement('script');
-        script.src=`https://maps.googleapis.com/maps/api/js?key=${APIKey}&libraries=places`;
+        script.src=`https://maps.googleapis.com/maps/api/js?key=${APIKey}&libraries=places&v=3`;
         script.async=true;
         script.defer=true;
         script.addEventListener('load',()=>{
