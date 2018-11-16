@@ -153,8 +153,8 @@ export  class Neighborhood extends Component{
         //display temporary text;
         this.infoWindow.setContent(`${location.text}<br/>Details are Loading....`);
         this.infoWindow.open(this.map, marker);
-        var auth=`&client_id=LVJO54D0VKC0UELX4IA43NT4YWFIUBW0O05B0VRA41LQ2J43&client_secret=IRZUEGSPHK4OM3JNVVNPTPFU0BAX4ALOUU4NU0P05QGNE0RX&v=20190101`
-        fetch(`https://api.foursquare.com/v2/venues/search?ll=${location.position.lat},${location.position.lng}&&radius=20&intent=browse&${auth}`).then(response=>{
+        var auth=`client_id=LVJO54D0VKC0UELX4IA43NT4YWFIUBW0O05B0VRA41LQ2J43&client_secret=YLQ3VUVGFCMG0WUXPDOXB3KNBJR5O5KEO4ZIHXHYBGDUWOV3&v=20190101`
+        fetch(`https://api.foursquare.com/v2/venues/search?ll=${location.position.lat},${location.position.lng}&radius=20&intent=browse&${auth}`).then(response=>{
                 return response.json();
         }).then(data=> {
             var venues = data.response.venues;
@@ -173,6 +173,11 @@ export  class Neighborhood extends Component{
                     var content=`<h6>Name:${name}</h6><p>Address:${address}</p><i>Rating:${rating}</i><br/><a href="${url}"> Visit FourSquarePage</a>"`
                     this.infoWindow.setContent(content);
                     this.infoWindow.open(this.map, marker);
+            }
+            else{
+                var content=`Name:${location.text}<br/> Details Cant be fetched as API Key is overused `;
+                this.infoWindow.setContent(content);
+                this.infoWindow.open(this.map, marker);
             }
         })
 
