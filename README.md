@@ -1,5 +1,5 @@
 # Udacity Neighborhood App
-    This App allows you to search for favourite locations and filter those based on the query along with google maps
+ This App allows you to search for favourite locations and filter those based on the query along with google maps
 In the project directory, you can run:
 
 ### `npm start`
@@ -19,7 +19,7 @@ Your app is ready to be deployed!
 This can be deployed by just distributing dist folder to locations specfied by corresponding server software.
 
 
-To use/test the  App offline usage , edit index.js last line `ServiceWorker.unregister()` as `ServiceWorker.register()`
+To use/test the  App offline usage , edit `index.js` last line `ServiceWorker.unregister()` as `ServiceWorker.register()`
 
 ### Note
-    This App uses FourSquare API to get information about the object. Sometimes Markers initial data and data from FourSquare data might mismatch and soory for the inconveniance.
+  This App uses FourSquare API to get information about the object. Sometimes Markers initial data and data from FourSquare data might mismatch and soory for the inconveniance.
