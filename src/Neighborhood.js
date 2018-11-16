@@ -160,15 +160,37 @@ export  class Neighborhood extends Component{
         this.infoWindow.setContent(`${location.text}<br/>Details are Loading....`);
         this.infoWindow.open(this.map, marker);
         var auth=`client_id=LVJO54D0VKC0UELX4IA43NT4YWFIUBW0O05B0VRA41LQ2J43&client_secret=YLQ3VUVGFCMG0WUXPDOXB3KNBJR5O5KEO4ZIHXHYBGDUWOV3&v=20190101`
-        fetch(`https://api.foursquare.com/v2/venues/search?ll=${location.position.lat},${location.position.lng}&radius=20&intent=browse&${auth}`).then(response=>{
+
+        fetch(`https://api.foursquare.com/v2/venues/search?ll=${location.position.lat},${location.position.lng}&radius=40&intent=browse&${auth}`).then(response=>{
                 return response.json();
         }).then(data=> {
+            if(!(data.meta.code<300 && data.meta.code>=200)){
+                console.log("Error happend while retreiving data");
+                var content=`${location.text}<br/> Error occured during venue search to FourSquare search API See console for errors`;
+                console.log("FourSqaure API:  ",content,data)
+                this.infoWindow.setContent(content);
+                this.infoWindow.open(this.map, marker);
+                return;
+            }
             var venues = data.response.venues;
             var bestLocation = venues[0]; //choose the first location
-            return  fetch(`https://api.foursquare.com/v2/venues/${bestLocation.id}?${auth}`);
-        }).then(response=>response.json()).then(data=>{
-            var venue=data.response.venue;
-            if(data.meta.code>=200&&data.meta.code<300){
+            if(bestLocation==undefined || venues==undefined){
+                var content=`Name:${location.text}<br/> No Nearby data Found. `;
+                console.log("FourSquare API error: ",data)
+                this.infoWindow.setContent(content);
+                this.infoWindow.open(this.map, marker);
+                return;
+            }
+            return  fetch(`https://api.foursquare.com/v2/venues/${bestLocation.id}?${auth}`).then(response=>response.json()).then(data=>{
+                var venue=data.response.venue;
+                if(venue==undefined){
+                    console.log("Error happend while retrieving data");
+                    var content=`${location.text}<br/> Error occured during venue search to FourSquare venue API See console for dubgging`;
+                    console.log("FourSqaure API:  ",content,data)
+                    this.infoWindow.setContent(content);
+                    this.infoWindow.open(this.map, marker);
+                }
+                if(data.meta.code>=200&&data.meta.code<300){
                     var name=venue.name;
                     var url=venue.canonicalUrl;
                     var address=venue.location.address;
@@ -184,12 +206,31 @@ export  class Neighborhood extends Component{
                     this.infoWindow.setContent(content);
                     this.infoWindow.open(this.map, marker);
                     location.infoWindowContent=content; //save it for future use
-            }
-            else{
-                var content=`Name:${location.text}<br/> Details Cant be fetched as API Key is overused `;
+                }
+                else if(data.meta.code>400){
+                    var content=`Name:${location.text}<br/> Details Cant be fetched as API Key is overused `;
+                    console.log("FourSquare API error: ",data)
+                    this.infoWindow.setContent(content);
+                    this.infoWindow.open(this.map, marker);
+                }else{
+                    var content=`Name:${location.text}<br/> Error occured while fetching details See console for details`;
+                    console.log("FourSquare API error: ",content,data)
+                    this.infoWindow.setContent(content);
+                    this.infoWindow.open(this.map, marker);
+                }
+            }).catch(error=>{
+                console.log("Error happend while retreiving data");
+                var content=`${location.text}<br/> Error occured during venue search to FourSquare venue API`+error;
+                console.log("FourSqaure API:  ",content)
                 this.infoWindow.setContent(content);
                 this.infoWindow.open(this.map, marker);
-            }
+            })
+        }).catch(error=>{
+            console.log("Error happend while retreiving data");
+            var content=`${location.text}<br/> Error occured during venue search to FourSquare search API`+error;
+            console.log("FourSqaure API:  ",content)
+            this.infoWindow.setContent(content);
+            this.infoWindow.open(this.map, marker);
         })
 
     }
@@ -216,7 +257,7 @@ export  class Neighborhood extends Component{
                     <ol className="list-group">
                         {
                             this.state.locations.map((location,index)=>{
-                                return <a key={location.text} className="list-group-item list-group-item-action" href="#" onFocus={()=>{this.clickMarkerHandler(location)}} tabIndex={index+3}>
+                                return <a key={location.text} className="list-group-item list-group-item-action" href="#" onFocus={()=>{this.clickMarkerHandler(location)}} tabIndex={index+3} aria-label={`link to ${location.text}`}>
                                         {location.text}
                                 </a>
                             })
