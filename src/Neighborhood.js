@@ -149,8 +149,33 @@ export  class Neighborhood extends Component{
         }
     }
     createInfoWindow(location,marker){
-        this.infoWindow.setContent(location.text);
-        this.infoWindow.open(this.map,marker);
+        //display temporary text;
+        this.infoWindow.setContent(`${location.text}<br/>Details are Loading....`);
+        this.infoWindow.open(this.map, marker);
+        var auth=`&client_id=LVJO54D0VKC0UELX4IA43NT4YWFIUBW0O05B0VRA41LQ2J43&client_secret=IRZUEGSPHK4OM3JNVVNPTPFU0BAX4ALOUU4NU0P05QGNE0RX&v=20190101`
+        fetch(`https://api.foursquare.com/v2/venues/search?ll=${location.position.lat},${location.position.lng}&&radius=20&intent=browse&${auth}`).then(response=>{
+                return response.json();
+        }).then(data=> {
+            var venues = data.response.venues;
+            var bestLocation = venues[0]; //choose the first location
+            return  fetch(`https://api.foursquare.com/v2/venues/${bestLocation.id}?${auth}`);
+        }).then(response=>response.json()).then(data=>{
+            console.log("Second then")
+            var venue=data.response.venue;
+            console.log("Test Conditon ",data.meta.code>=200&&data.meta.code<300);
+            if(data.meta.code>=200&&data.meta.code<300){
+                    var name=venue.name;
+                    var url=venue.canonicalUrl;
+                    var address=venue.location.address;
+                    var rating=venue.rating;
+                    if(!rating)
+                        rating=5.0;
+                    var content=`<h6>Name:${name}</h6><p>Address:${address}</p><i>Rating:${rating}</i><br/><a href="${url}"> Visit FourSquarePage</a>"`
+                    this.infoWindow.setContent(content);
+                    this.infoWindow.open(this.map, marker);
+            }
+        })
+
     }
     componentDidMount(){
         if(this.debug)
@@ -166,16 +191,16 @@ export  class Neighborhood extends Component{
         document.body.appendChild(script);
     }
     render(){
-        return <div className="Neighborhood">
+        return <div className="Neighborhood  row">
             <div className="col-sm-3 full-height">
                 <div className="form-group">
-                    <input type="text" placeholder="Enter Place Name "  onChange={this.updateQueryHandler} value={this.state.query} className="form-control"/>
+                    <input type="text" placeholder="Enter Place Name "  onChange={this.updateQueryHandler} value={this.state.query} className="form-control" tabIndex={1}/>
                 </div>
                 <div className="search-results">
                     <ol className="list-group">
                         {
-                            this.state.locations.map(location=>{
-                                return <a key={location.text} className="list-group-item list-group-item-action" href="#" onFocus={()=>{this.clickMarkerHandler(location)}}>
+                            this.state.locations.map((location,index)=>{
+                                return <a key={location.text} className="list-group-item list-group-item-action" href="#" onFocus={()=>{this.clickMarkerHandler(location)}} tabIndex={index+3}>
                                         {location.text}
                                 </a>
                             })
@@ -183,12 +208,11 @@ export  class Neighborhood extends Component{
                     </ol>
                 </div>
             </div>
-            <div id="map" className="col-sm-9 map full-height"></div>
+            <div id="map" className="col-sm-9 map full-height" tabIndex={2}></div>
         </div>
     }
 
     clickMarkerHandler(location) {
-        console.log(location);
         this.createInfoWindow(location,location.marker);
     }
 
