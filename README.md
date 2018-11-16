@@ -22,4 +22,4 @@ This can be deployed by just distributing dist folder to locations specfied by c
 To use/test the  App offline usage , edit `index.js` last line `ServiceWorker.unregister()` as `ServiceWorker.register()`
 
 ### Note
-  This App uses FourSquare API to get information about the object. Sometimes Markers initial data and data from FourSquare data might mismatch and soory for the inconveniance.
+  This App uses FourSquare API to get information about the location. Sometimes Markers initial data and data from FourSquare  might mismatch and sorry for the inconveniance caused.
