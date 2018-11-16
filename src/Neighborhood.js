@@ -150,6 +150,12 @@ export  class Neighborhood extends Component{
         }
     }
     createInfoWindow(location,marker){
+        if(location.infoWindowContent){ //if this is already computed.
+            this.infoWindow.setContent(location.infoWindowContent);
+            this.infoWindow.open(this.map, marker);
+            return;
+        }
+
         //display temporary text;
         this.infoWindow.setContent(`${location.text}<br/>Details are Loading....`);
         this.infoWindow.open(this.map, marker);
@@ -173,6 +179,7 @@ export  class Neighborhood extends Component{
                     var content=`<h6>Name:${name}</h6><p>Address:${address}</p><i>Rating:${rating}</i><br/><a href="${url}"> Visit FourSquarePage</a>"`
                     this.infoWindow.setContent(content);
                     this.infoWindow.open(this.map, marker);
+                    location.infoWindowContent=content; //save it for future use
             }
             else{
                 var content=`Name:${location.text}<br/> Details Cant be fetched as API Key is overused `;
