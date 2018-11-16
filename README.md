@@ -2,6 +2,9 @@
  This App allows you to search for favourite locations and filter those based on the query along with google maps
 In the project directory, you can run:
 
+### `npm install`
+ This installs all the necessary node modules such as react and its dependencies
+
 ### `npm start`
 
  It Runs the app in the development mode.<br> And then
