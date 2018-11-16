@@ -175,7 +175,7 @@ export  class Neighborhood extends Component{
                     <ol className="list-group">
                         {
                             this.state.locations.map(location=>{
-                                return <a key={location.text} className="list-group-item list-group-item-action" href="#" onClick={()=>{this.clickMarkerHandler(location)}}>
+                                return <a key={location.text} className="list-group-item list-group-item-action" href="#" onFocus={()=>{this.clickMarkerHandler(location)}}>
                                         {location.text}
                                 </a>
                             })
@@ -189,6 +189,7 @@ export  class Neighborhood extends Component{
 
     clickMarkerHandler(location) {
         console.log(location);
+        this.createInfoWindow(location,location.marker);
     }
 
     updateQueryHandler(evt) {
