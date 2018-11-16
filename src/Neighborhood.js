@@ -150,6 +150,7 @@ export  class Neighborhood extends Component{
         }
     }
     createInfoWindow(location,marker){
+        marker.setAnimation(window.google.maps.Animation.DROP);
         if(location.infoWindowContent){ //if this is already computed.
             this.infoWindow.setContent(location.infoWindowContent);
             this.infoWindow.open(this.map, marker);
