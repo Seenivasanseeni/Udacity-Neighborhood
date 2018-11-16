@@ -173,14 +173,14 @@ export  class Neighborhood extends Component{
                 return;
             }
             var venues = data.response.venues;
-            var bestLocation = venues[0]; //choose the first location
-            if(bestLocation==undefined || venues==undefined){
+            if( venues==undefined|| venues[0]==undefined){
                 var content=`Name:${location.text}<br/> No Nearby data Found. `;
                 console.log("FourSquare API error: ",data)
                 this.infoWindow.setContent(content);
                 this.infoWindow.open(this.map, marker);
                 return;
             }
+            var bestLocation = venues[0]; //choose the first location
             return  fetch(`https://api.foursquare.com/v2/venues/${bestLocation.id}?${auth}`).then(response=>response.json()).then(data=>{
                 var venue=data.response.venue;
                 if(venue==undefined){
@@ -189,6 +189,7 @@ export  class Neighborhood extends Component{
                     console.log("FourSqaure API:  ",content,data)
                     this.infoWindow.setContent(content);
                     this.infoWindow.open(this.map, marker);
+                    return;
                 }
                 if(data.meta.code>=200&&data.meta.code<300){
                     var name=venue.name;
