@@ -249,7 +249,7 @@ export  class Neighborhood extends Component{
             this.setState({mapReady: true,locations:this.state.allLocations},this.initializeMap)
         })
         window.gm_authFailure=function(error){
-            var content="API Key error Invalid Key error. Try changing the key";
+            var content="Google Maps API Key error Invalid Key error. Try changing the key";
             console.log(content)
             document.getElementById("map").innerHTML="<div class=\'alert alert-danger vertical-center\'>"+content+"</div>";
         }
